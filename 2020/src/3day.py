@@ -12,7 +12,7 @@ def solve(data, st):
 
 if __name__ == "__main__":
   with open("../data/day3.txt", "r") as f:
-    data = list(map(lambda x: x.strip(), f.readlines()))
+    data = f.read().splitlines()
 
   res = solve(data, [1, 3])
   print("Part I:", res)

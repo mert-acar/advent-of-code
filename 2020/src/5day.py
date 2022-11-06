@@ -23,7 +23,7 @@ def solve(data):
 
 if __name__ == "__main__":
   with open("../data/day5.txt", "r") as f:
-    data = list(map(lambda x: x.strip(), f.readlines()))
+    data = f.read().splitlines()
   
   res1, res2 = solve(data)
   print("Part I:", res1)

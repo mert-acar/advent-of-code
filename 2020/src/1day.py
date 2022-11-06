@@ -5,7 +5,6 @@ def part1(data, target=2020):
       return data[i] * (target - data[i])
   return -1
 
-
 def part2(data, target=2020):
   for i in range(len(data)):
     residual = target - data[i]
