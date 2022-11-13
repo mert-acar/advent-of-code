@@ -1,4 +1,5 @@
 # Solution submitted to: https://adventofcode.com/2020/day/9
+from utils import timing
 
 def part1(data, N=25):
   for i in range(N, len(data)):
@@ -14,9 +15,9 @@ def part1(data, N=25):
       return target
   return -1
 
+@timing
 def part2(data, num, N):
-  n = len(data)
-  l = []
+  n = data.index(num)
   for i in range(n):
     for j in range(i + 1, n):
       if sum(data[i:j]) == num:
