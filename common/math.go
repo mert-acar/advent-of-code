@@ -14,17 +14,16 @@ func Abs[num number](x num) num {
 }
 
 func Diff[num number](nums []num, n int) []num {
-  var difference []num
-  for i := 0; i < len(nums) - 1; i++ {
-    difference = append(difference, nums[i + 1] - nums[i])
-  }
-  if n == 1 {
-    return difference
-  } else {
-    return Diff(difference, n - 1)
-  }
+	var difference []num
+	for i := 0; i < len(nums)-1; i++ {
+		difference = append(difference, nums[i+1]-nums[i])
+	}
+	if n == 1 {
+		return difference
+	} else {
+		return Diff(difference, n-1)
+	}
 }
-
 
 func Sum2D[num number](slice [][]num) num {
 	total := num(0)
@@ -36,7 +35,6 @@ func Sum2D[num number](slice [][]num) num {
 	return total
 }
 
-
 func Pow[num number](n, m num) num {
-  return num(math.Pow(float64(n), float64(m)))
+	return num(math.Pow(float64(n), float64(m)))
 }
