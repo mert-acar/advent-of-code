@@ -65,35 +65,35 @@ func moveGuard(vals []string, i, j int) int {
 func trapGuard(vals []string, sx, sy int) int {
 	n, m := len(vals), len(vals[0])
 	sdx, sdy := -1, 0
-  total := 0
-  var pvals []string
-  var x, y int
-  for i := 0; i < n; i++{
-    for j := 0; j < m; j++{
-      if vals[i][j] != '.' {
-        continue
-      }
-      pvals = replaceCharecter(vals, '#', i, j)
-      dx, dy := sdx, sdy
-      x, y = sx, sy
-      h := map[string]bool{}
-      for x+dx >= 0 && x+dx < n && y+dy >= 0 && y+dy < m {
-        if pvals[x+dx][y+dy] == '#' {
-          key := strconv.Itoa(x,) + ":" + strconv.Itoa(y,) + ":" + strconv.Itoa(dx,) + strconv.Itoa(dy,)
+	total := 0
+	var pvals []string
+	var x, y int
+	for i := 0; i < n; i++ {
+		for j := 0; j < m; j++ {
+			if vals[i][j] != '.' {
+				continue
+			}
+			pvals = replaceCharecter(vals, '#', i, j)
+			dx, dy := sdx, sdy
+			x, y = sx, sy
+			h := map[string]bool{}
+			for x+dx >= 0 && x+dx < n && y+dy >= 0 && y+dy < m {
+				if pvals[x+dx][y+dy] == '#' {
+					key := strconv.Itoa(x) + ":" + strconv.Itoa(y) + ":" + strconv.Itoa(dx) + strconv.Itoa(dy)
 					_, ok := h[key]
 					if ok {
 						total++
 						break
 					}
-					h[key] = true  
-          dx, dy = dy, -dx
-          continue
-        }
-        x, y = x+dx, y+dy
-      }
-    }
-  }
-  return total
+					h[key] = true
+					dx, dy = dy, -dx
+					continue
+				}
+				x, y = x+dx, y+dy
+			}
+		}
+	}
+	return total
 }
 
 func main() {
@@ -108,7 +108,7 @@ func main() {
 	// Remove guard symbol
 	vals = replaceCharecter(vals, '.', i, j)
 
-	totalVisited  := moveGuard(vals, i, j)
+	totalVisited := moveGuard(vals, i, j)
 	fmt.Printf("Part I: %d\n", totalVisited)
 
 	obs := trapGuard(vals, i, j)
