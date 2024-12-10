@@ -25,6 +25,14 @@ func Diff[num number](nums []num, n int) []num {
 	}
 }
 
+func Sum1D[num number](slice []num) num {
+	total := num(0)
+	for _, value := range slice {
+    total += value
+	}
+	return total
+}
+
 func Sum2D[num number](slice [][]num) num {
 	total := num(0)
 	for _, row := range slice {
