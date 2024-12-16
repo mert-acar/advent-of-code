@@ -1,1 +1,1 @@
-lol
+Advent of [Code](https://adventofcode.com/) solutions in go
