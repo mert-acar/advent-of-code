@@ -109,13 +109,13 @@ func slicesEqual(a, b []int) bool {
 	return true
 }
 
-func reverseEngineer(A, B, C int, opcodes []int) int {
+func reverseEngineer(opcodes []int) int {
 	candidates := Queue{vals: [][]int{{len(opcodes) - 1, 0}}}
 	for !candidates.isEmpty() {
 		curr := candidates.dequeue()
 		for i := 0; i < 8; i++ {
 			nA := (curr[1] * 8) + i
-			out := runProgram(nA, B, C, opcodes)
+			out := runProgram(nA, 0, 0, opcodes)
 			ok := true
 			for j := curr[0]; j < len(opcodes); j++ {
 				if opcodes[j] != out[j-curr[0]] {
@@ -144,5 +144,5 @@ func main() {
 	A, B, C, opcodes := parseInput(bytes)
 
 	fmt.Printf("Part I: %s\n", parseOut(runProgram(A, B, C, opcodes)))
-	fmt.Printf("Part II: %d\n", reverseEngineer(A, B, C, opcodes))
+	fmt.Printf("Part II: %d\n", reverseEngineer(opcodes))
 }
