@@ -3,93 +3,98 @@ package main
 import (
 	"bufio"
 	"fmt"
+	"math"
 	"os"
 	"regexp"
 	"strconv"
 )
 
-type Coord struct {
-	X, Y int64
+type Point struct {
+	x, y int
 }
 
-const OFFSET = 10000000000000
-
-func parseInputFile(filename string) ([][][]int64, error) {
+func parseInput(filename string) (data [][][]int) {
 	file, err := os.Open(filename)
 	if err != nil {
-		return nil, err
+		fmt.Fprintf(os.Stderr, "Error reading the input file: %v\n", err)
+		os.Exit(1)
 	}
 	defer file.Close()
+	var curr [][]int
+	buttonRegex := regexp.MustCompile(`-?\d+`)
 
-	var data [][][]int64
-	var currentGroup [][]int64
 	scanner := bufio.NewScanner(file)
-
-	buttonRegex := regexp.MustCompile(`\d+`)
-
 	for scanner.Scan() {
 		line := scanner.Text()
-
 		if line == "" {
+			if len(curr) == 3 {
+				data = append(data, curr)
+				curr = nil
+			}
 			continue
 		}
-
 		matches := buttonRegex.FindAllString(line, -1)
-		var numbers []int64
+		var numbers []int
 		for _, match := range matches {
-			num, err := strconv.ParseInt(match, 10, 64)
-			if err != nil {
-				return nil, err
-			}
+			num, _ := strconv.Atoi(match)
 			numbers = append(numbers, num)
 		}
+		curr = append(curr, numbers)
+	}
+	if len(curr) == 3 {
+		data = append(data, curr)
+	}
+	return
+}
 
-		currentGroup = append(currentGroup, numbers)
+func solveMachine(m [][]int, maxPresses int, offset int64) (bool, float64, float64) {
+	det := float64((m[0][0] * m[1][1]) - (m[1][0] * m[0][1]))
+	if math.Abs(det) < 1e-10 {
+		return false, 0, 0
+	}
 
-		if len(currentGroup) == 3 {
-			data = append(data, currentGroup)
-			currentGroup = nil
+	targetX := float64(m[2][0] + int(offset))
+	targetY := float64(m[2][1] + int(offset))
+
+	// x0yb - y0xb
+	x_coef := (float64(m[1][1])*targetX - float64(m[1][0])*targetY) / det
+	// y0xa - x0ya
+	y_coef := (float64(m[0][0])*targetY - float64(m[0][1])*targetX) / det
+
+	// Check if coefficients are "effectively" integers
+	if math.Abs(x_coef-math.Round(x_coef)) < 1e-10 &&
+		math.Abs(y_coef-math.Round(y_coef)) < 1e-10 {
+		x_coef = math.Round(x_coef)
+		y_coef = math.Round(y_coef)
+
+		if x_coef >= 0 && y_coef >= 0 {
+			if maxPresses == 0 || (x_coef <= float64(maxPresses) && y_coef <= float64(maxPresses)) {
+				return true, x_coef, y_coef
+			}
 		}
 	}
-
-	if err := scanner.Err(); err != nil {
-		return nil, err
-	}
-
-	return data, nil
+	return false, 0, 0
 }
 
 func main() {
-	data, err := parseInputFile("input.txt")
-	if err != nil {
-		fmt.Println("Error reading input file:", err)
-		return
-	}
+	data := parseInput("./input.txt")
 
-	var total int64
+	// Part 1
+	total1 := 0.0
 	for _, m := range data {
-		a := Coord{X: m[0][0], Y: m[0][1]}
-		b := Coord{X: m[1][0], Y: m[1][1]}
-		c := Coord{X: m[2][0] + OFFSET, Y: m[2][1] + OFFSET}
-
-		a1, b1, c1 := a.X, b.X, -c.X
-		a2, b2, c2 := a.Y, b.Y, -c.Y
-
-		x := b1*c2 - c1*b2
-		y := c1*a2 - a1*c2
-		z := a1*b2 - b1*a2
-
-		if x%z != 0 || y%z != 0 {
-			continue
-		}
-
-		x /= z
-		y /= z
-
-		if x >= 0 && y >= 0 {
-			total += x*3 + y
+		if possible, a, b := solveMachine(m, 100, 0); possible {
+			total1 += (a * 3) + b
 		}
 	}
+	fmt.Printf("Part 1: %d\n", int(math.Round(total1)))
 
-	fmt.Println(total)
+	// Part 2
+	total2 := 0.0
+	offset := int64(10000000000000)
+	for _, m := range data {
+		if possible, a, b := solveMachine(m, 0, offset); possible {
+			total2 += (a * 3) + b
+		}
+	}
+	fmt.Printf("Part 2: %d\n", int(math.Round(total2)))
 }
