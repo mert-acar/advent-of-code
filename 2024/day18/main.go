@@ -63,13 +63,13 @@ func shortestPathBFS(grid [][]rune, start, end Point) []Point {
 			}
 		}
 	}
-  fmt.Println("No path found.")
+	fmt.Println("No path found.")
 	return []Point{}
 }
 
 func main() {
 	// n, u := 7, 12
-  n, u := 71, 1024
+	n, u := 71, 1024
 	lines, err := common.ReadLinesFromFile("./input.txt")
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Error reading the input file: %v\n", err)
@@ -87,36 +87,36 @@ func main() {
 	grid := make([][]rune, n)
 	for i := range grid {
 		grid[i] = make([]rune, n)
-    for j := range grid[i] {
-      grid[i][j] = '.'
-    }
+		for j := range grid[i] {
+			grid[i][j] = '.'
+		}
 	}
 
 	for _, point := range coords[:u] {
 		grid[point.y][point.x] = '#'
 	}
-  
-  path := shortestPathBFS(grid, Point{0, 0}, Point{n-1, n-1})
-  for _, p := range path {
-    grid[p.y][p.x] = 'O'
-  }
-  for _, row := range grid {
-    for _, r := range row {
-      fmt.Print(string(r))
-    }
-    fmt.Println()
-  }
-  fmt.Printf("Part I: %d\n", len(path) - 1)
 
-  new_grid := make([][]rune, n)
-  copy(new_grid, grid)
-  for _, point := range coords[u:] {
-    new_grid[point.y][point.x] = '#'
-    path = shortestPathBFS(new_grid, Point{0, 0}, Point{n-1, n-1})
-    if len(path) == 0 {
-      fmt.Printf("Part II: %d, %d\n", point.x, point.y)
-      break
-    }
-  }
+	path := shortestPathBFS(grid, Point{0, 0}, Point{n - 1, n - 1})
+	for _, p := range path {
+		grid[p.y][p.x] = 'O'
+	}
+	for _, row := range grid {
+		for _, r := range row {
+			fmt.Print(string(r))
+		}
+		fmt.Println()
+	}
+	fmt.Printf("Part I: %d\n", len(path)-1)
+
+	new_grid := make([][]rune, n)
+	copy(new_grid, grid)
+	for _, point := range coords[u:] {
+		new_grid[point.y][point.x] = '#'
+		path = shortestPathBFS(new_grid, Point{0, 0}, Point{n - 1, n - 1})
+		if len(path) == 0 {
+			fmt.Printf("Part II: %d, %d\n", point.x, point.y)
+			break
+		}
+	}
 
 }
